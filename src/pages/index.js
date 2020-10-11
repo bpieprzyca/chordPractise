@@ -103,6 +103,7 @@ export default function Home() {
   const [selectedSounds, setSelected] = useState([]);
   const [modal, setModal] = useState(false);
 
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioContext = new AudioContext();
   const sounds = [
     {
