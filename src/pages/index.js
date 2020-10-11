@@ -185,12 +185,6 @@ export default function Home() {
       <div className="chordName">
         {currentSound && currentChordType && `${currentSound}${currentChordType}`}
       </div>
-      <div>
-        <p>
-          <input type="checkbox" name="main" />
-          mainSound
-        </p>
-      </div>
       <div className="buttonsWrapper">
         {
           sounds.map(
