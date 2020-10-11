@@ -103,8 +103,7 @@ export default function Home() {
   const [selectedSounds, setSelected] = useState([]);
   const [modal, setModal] = useState(false);
 
-  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-  const audioContext = new AudioContext();
+  const audioContext = typeof window !== 'undefined' && new AudioContext();
   const sounds = [
     {
       name: 'C',
@@ -138,18 +137,22 @@ export default function Home() {
 
   const onRandomButtonClick = () => {
     const randomChord = getRandomChord(sounds);
-    playNote(58 + randomChord.firstNotePitch, audioContext);
+    if (audioContext) {
+      playNote(58 + randomChord.firstNotePitch, audioContext);
+    }
     setSound(randomChord.firstNoteName);
     setChordType(randomChord.chordType);
     setChordNotes([...randomChord.restNotes, randomChord.firstNoteName]);
     setSelected([randomChord.firstNoteName]);
   };
 
-  document.onkeyup = (event) => {
-    if (event.code === 'Space') {
-      onRandomButtonClick();
-    }
-  };
+  if (typeof document !== 'undefined') {
+    document.onkeyup = (event) => {
+      if (event.code === 'Space') {
+        onRandomButtonClick();
+      }
+    };
+  }
 
   const onNoteClick = ({ name, pitch }) => {
     const isSelected = selectedSounds.indexOf(name) > -1;
@@ -161,7 +164,7 @@ export default function Home() {
     }
     setSelected(newSelected);
 
-    if (_includes([...currentChordNotes, currentSound], name)) {
+    if (_includes([...currentChordNotes, currentSound], name) && audioContext) {
       playNote(58 + pitch, audioContext);
     }
 
