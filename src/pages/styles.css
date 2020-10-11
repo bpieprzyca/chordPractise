@@ -1,0 +1,90 @@
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: rgb(244, 249, 250);
+}
+
+.randomButton {
+    padding: 32px 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #e4c82d;
+    background-color: #dfd184;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.chordName {
+    font-size: 48px;
+    height: 56px;
+    font-weight: 600;
+    text-align: center;
+    margin: 32px 0;
+}
+
+.buttonsWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    width: 80%;
+}
+
+.optionWrapper {
+    border: 2px solid #347761;
+    background-color: #b0f1dc;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    padding: 32px;
+    margin: 32px;
+}
+
+.optionWrapper:hover {
+    border: 2px solid #1a4670;
+    background-color: #7eb5e9;
+    cursor: pointer;
+}
+
+.selectedWrong {
+    border: 2px solid #6e143e;
+    background-color: #eb90ba;
+}
+
+.selectedCorrect {
+    border: 2px solid #418514;
+    background-color: #afe68b;
+}
+
+.selected:hover {
+    cursor: auto;
+}
+
+.modal {
+    background-color: #90ec53;
+    border: 5px solid #528132;
+    color: #3c135e;
+    position: fixed;
+    width: 384px;
+    height: 256px;
+    top: calc(50% - 128px);
+    left: calc(50% - 192px);
+    text-align: center;
+    font-size: 72px;
+    font-weight: 800;
+    border-radius: 8px;
+}
+
+.successLiteral {
+    line-height: 256px;
+    margin: 0;
+}
+
+.overlay {
+    width: 100%;
+    height:100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(67, 99, 131, 0.5);
+}
