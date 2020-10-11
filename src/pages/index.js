@@ -31,7 +31,7 @@ const playNote = (midi, audioContext) => {
 
 const soundTypes = ['main', 'flat', 'sharp', 'doubleFlat', 'doubleSharp'];
 
-const chordTypes = ['maj', 'min', 'dim', 'aug', '7'];
+const chordTypes = ['maj', 'min', 'dim', 'aug', '7', 'm7', '7b9', 'maj7', '-maj7'];
 
 const chordOffsets = {
   [chordTypes[0]]: [4, 7],
@@ -39,6 +39,10 @@ const chordOffsets = {
   [chordTypes[2]]: [3, 6],
   [chordTypes[3]]: [4, 8],
   [chordTypes[4]]: [4, 7, 10],
+  [chordTypes[5]]: [3, 7, 10],
+  [chordTypes[6]]: [4, 7, 10, 13],
+  [chordTypes[7]]: [4, 7, 11],
+  [chordTypes[8]]: [3, 7, 11],
 };
 
 const getSounds = (name, pitch) => ({
@@ -70,7 +74,9 @@ const getNote = (sounds, startingNote, orderOffset, pitchOffset) => {
   const note = _get(
     _find(
       sounds[noteOrder],
-      (el) => el.pitch === notePitch || el.pitch === (notePitch - 12),
+      (el) => el.pitch === notePitch
+       || el.pitch === (notePitch - 12)
+       || el.pitch === (notePitch - 24),
     ), 'name', '',
   );
 
@@ -82,7 +88,7 @@ const getChord = (sounds, startingNote, offsets) => offsets
 
 const getRandomChord = (sounds) => {
   const randomSoundOrder = _random(6);
-  const chordType = chordTypes[_random(4)];
+  const chordType = chordTypes[_random(chordTypes.length - 1)];
   const randomOffsets = chordOffsets[chordType];
   const randomSoundType = soundTypes[_random(1, 2)];
   const firstNotePitch = sounds[randomSoundOrder][randomSoundType].pitch;
