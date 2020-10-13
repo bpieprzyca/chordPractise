@@ -12,6 +12,7 @@ body {
     background-color: #dfd184;
     cursor: pointer;
     font-size: 24px;
+    margin-bottom: 16px;
 }
 
 .chordName {
@@ -36,8 +37,23 @@ body {
     text-align: center;
     font-size: 32px;
     font-weight: 800;
-    padding: 32px;
-    margin: 32px;
+    padding: 2vw;
+    margin: 2vw;
+}
+
+@media (max-width: 1024px) {
+    .optionWrapper {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 1.5vw;
+    margin: 1.5vw;
+    }
+    .buttonsWrapper {
+        width: 100%;
+    }
+    .chordName {
+        font-size: 36px;
+    }
 }
 
 .optionWrapper:hover {

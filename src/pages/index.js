@@ -9,6 +9,8 @@ import _includes from 'lodash/includes';
 
 import './styles.css';
 
+const getNoteFrequency = (midi) => 2 ** ((midi - 69) / 12) * 440;
+
 const playNote = (midi, audioContext) => {
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
@@ -20,7 +22,7 @@ const playNote = (midi, audioContext) => {
   oscillator.connect(gainNode);
 
   oscillator.frequency.setTargetAtTime(
-    2 ** ((midi - 69) / 12) * 440,
+    getNoteFrequency(midi),
     audioContext.currentTime,
     0,
   );
@@ -75,8 +77,8 @@ const getNote = (sounds, startingNote, orderOffset, pitchOffset) => {
     _find(
       sounds[noteOrder],
       (el) => el.pitch === notePitch
-       || el.pitch === (notePitch - 12)
-       || el.pitch === (notePitch - 24),
+      || el.pitch === (notePitch - 12)
+      || el.pitch === (notePitch - 24),
     ), 'name', '',
   );
 
@@ -84,29 +86,33 @@ const getNote = (sounds, startingNote, orderOffset, pitchOffset) => {
 };
 
 const getChord = (sounds, startingNote, offsets) => offsets
-  .map((el, index) => (getNote(sounds, startingNote, (index + 1) * 2, el)));
+  .map((offset, index) => (getNote(sounds, startingNote, (index + 1) * 2, offset)));
 
 const getRandomChord = (sounds) => {
-  const randomSoundOrder = _random(6);
-  const chordType = chordTypes[_random(chordTypes.length - 1)];
-  const randomOffsets = chordOffsets[chordType];
-  const randomSoundType = soundTypes[_random(1, 2)];
-  const firstNotePitch = sounds[randomSoundOrder][randomSoundType].pitch;
-  const firstNoteName = sounds[randomSoundOrder][randomSoundType].name;
+  const firstNoteOrder = _random(6);
+  const firstNoteType = soundTypes[_random(1, 2)];
+  const randomChordType = chordTypes[_random(chordTypes.length - 1)];
+  const offsets = chordOffsets[randomChordType];
+
+  const firstNote = sounds[firstNoteOrder][firstNoteType];
+  const firstNotePitch = firstNote.pitch;
+  const firstNoteName = firstNote.name;
 
   return ({
-    chordType,
+    chordType: randomChordType,
     firstNoteName,
     firstNotePitch,
-    restNotes: getChord(sounds, { order: randomSoundOrder, pitch: firstNotePitch }, randomOffsets),
+    restNotes: getChord(sounds, { order: firstNoteOrder, pitch: firstNotePitch }, offsets),
   });
 };
 
 export default function Home() {
-  const [currentSound, setSound] = useState(null);
+  const [currentFirstNote, setFirstNote] = useState(null);
   const [currentChordType, setChordType] = useState(null);
   const [currentChordNotes, setChordNotes] = useState([]);
   const [selectedSounds, setSelected] = useState([]);
+  const [randomComponentOrder, setRandomComponentOrder] = useState([]);
+  const [isDefaultMode, setAppDefaultMode] = useState(true);
   const [modal, setModal] = useState(false);
 
   const audioContext = typeof window !== 'undefined' && new AudioContext();
@@ -142,20 +148,49 @@ export default function Home() {
   ].map((el) => getSounds(el.name, el.pitch));
 
   const onRandomButtonClick = () => {
+    if (!isDefaultMode) {
+      setAppDefaultMode(true);
+    }
     const randomChord = getRandomChord(sounds);
     if (audioContext) {
       playNote(58 + randomChord.firstNotePitch, audioContext);
     }
-    setSound(randomChord.firstNoteName);
+    setFirstNote(randomChord.firstNoteName);
     setChordType(randomChord.chordType);
     setChordNotes([...randomChord.restNotes, randomChord.firstNoteName]);
     setSelected([randomChord.firstNoteName]);
   };
 
+  const onRandomChordComponentClick = () => {
+    if (isDefaultMode) {
+      setAppDefaultMode(false);
+    }
+    const randomChord = getRandomChord(sounds);
+    if (audioContext) {
+      playNote(58 + randomChord.firstNotePitch, audioContext);
+    }
+    const randomChordComponentOrder = _random(0, randomChord.restNotes.length - 1);
+    const randomChordComponent = randomChord.restNotes[randomChordComponentOrder];
+    setFirstNote(randomChord.firstNoteName);
+    setChordType(randomChord.chordType);
+    setChordNotes([randomChordComponent, randomChord.firstNoteName]);
+    setSelected([randomChord.firstNoteName]);
+
+    setRandomComponentOrder(3 + randomChordComponentOrder * 2);
+  };
+
+  const handleAutoAction = () => {
+    if (isDefaultMode) {
+      onRandomButtonClick();
+    } else {
+      onRandomChordComponentClick();
+    }
+  };
+
   if (typeof document !== 'undefined') {
     document.onkeyup = (event) => {
       if (event.code === 'Space') {
-        onRandomButtonClick();
+        handleAutoAction();
       }
     };
   }
@@ -170,7 +205,7 @@ export default function Home() {
     }
     setSelected(newSelected);
 
-    if (_includes([...currentChordNotes, currentSound], name) && audioContext) {
+    if (_includes([...currentChordNotes, currentFirstNote], name) && audioContext) {
       playNote(58 + pitch, audioContext);
     }
 
@@ -180,16 +215,22 @@ export default function Home() {
       setModal(true);
       setTimeout(() => {
         setModal(false);
-        onRandomButtonClick();
+        handleAutoAction();
       }, 2000);
     }
   };
 
   return (
     <div>
-      <div className="randomButton" onClick={onRandomButtonClick}>Generate</div>
+      <div className="randomButton" onClick={onRandomButtonClick}>Generate chord</div>
+      <div className="randomButton" onClick={onRandomChordComponentClick}>Generate chord component</div>
       <div className="chordName">
-        {currentSound && currentChordType && `${currentSound}${currentChordType}`}
+        {
+            currentFirstNote && currentChordType && `${currentFirstNote}${currentChordType}`
+        }
+        {
+         !isDefaultMode && randomComponentOrder && `\t${randomComponentOrder}`
+        }
       </div>
       <div className="buttonsWrapper">
         {
