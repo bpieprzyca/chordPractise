@@ -222,8 +222,10 @@ export default function Home() {
 
   return (
     <div>
-      <div className="randomButton" onClick={onRandomButtonClick}>Generate chord</div>
-      <div className="randomButton" onClick={onRandomChordComponentClick}>Generate chord component</div>
+      <div className="buttonsWrapper">
+        <div className="randomButton" onClick={onRandomButtonClick}>Generate chord</div>
+        <div className="randomButton" onClick={onRandomChordComponentClick}>Generate chord component</div>
+      </div>
       <div className="chordName">
         {
             currentFirstNote && currentChordType && `${currentFirstNote}${currentChordType}`
