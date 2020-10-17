@@ -189,7 +189,7 @@ export default function Home() {
 
   if (typeof document !== 'undefined') {
     document.onkeyup = (event) => {
-      if (event.code === 'Space') {
+      if (event.code === 'Space' && !modal) {
         handleAutoAction();
       }
     };
