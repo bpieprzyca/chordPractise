@@ -24,7 +24,7 @@ body {
     height: 56px;
     font-weight: 600;
     text-align: center;
-    margin-top: 3vh;
+    margin-top: 4vh;
 }
 
 .buttonsWrapper {
@@ -59,6 +59,27 @@ body {
     }
     .chordName {
         font-size: 36px;
+        height: 48px;
+    }
+}
+
+@media (max-width: 768px) {
+    .optionWrapper {
+        font-size: 12px;
+        padding: 1vw;
+        margin-top: 3vw;
+        margin-bottom: 3vw;
+    }
+    .buttonsWrapper {
+        width: 100%;
+    }
+    .chordName {
+        font-size: 24px;
+        height: 32px;
+    }
+    .randomButton {
+        font-size: 12px;
+        padding: 1vh 0;
     }
 }
 
