@@ -33,7 +33,20 @@ const playNote = (midi, audioContext) => {
 
 const soundTypes = ['main', 'flat', 'sharp', 'doubleFlat', 'doubleSharp'];
 
-const chordTypes = ['maj', 'min', 'dim', 'aug', '7', 'm7', '7b9', 'maj7', '-maj7'];
+const chordTypes = [
+  'maj',
+  'min',
+  'dim',
+  'aug',
+  '7',
+  'm7',
+  '7b9',
+  'maj7',
+  '-maj7',
+  'aug7',
+  'dim7',
+  'halfdim7',
+];
 
 const chordOffsets = {
   [chordTypes[0]]: [4, 7],
@@ -45,6 +58,9 @@ const chordOffsets = {
   [chordTypes[6]]: [4, 7, 10, 13],
   [chordTypes[7]]: [4, 7, 11],
   [chordTypes[8]]: [3, 7, 11],
+  [chordTypes[9]]: [4, 8, 10],
+  [chordTypes[10]]: [3, 6, 10],
+  [chordTypes[11]]: [3, 6, 9],
 };
 
 const getSounds = (name, pitch) => ({
